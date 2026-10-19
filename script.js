@@ -135,7 +135,7 @@ window.BD_SCRIPT = [
  },
  {
   "who": "yt",
-  "text": "「……喔對。」"
+  "text": "「……對啦。」"
  },
  {
   "who": "yt",
@@ -318,7 +318,7 @@ window.BD_SCRIPT = [
  },
  {
   "who": "yt",
-  "text": "「那換一個。」",
+  "text": "「那改成別的。」",
   "gap": true
  },
  {
