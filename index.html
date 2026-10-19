@@ -31,6 +31,8 @@
   #frame img { transition: opacity 2.5s ease, filter 2.5s ease; opacity: 0; }
   /* 開場的螢幕：亮的那一塊與照到房間的光，各自用 screen 混合疊上去，由 JS 控制閃動 */
   #screenRect, #spill { position: absolute; pointer-events: none; opacity: 0; mix-blend-mode: screen; }
+  /* 圖上的螢幕本來就畫成亮的：用一層深色蓋上去才能讓它變暗、關掉 */
+  #screenDim { position: absolute; pointer-events: none; opacity: 0; background: rgb(8, 12, 24); border-radius: 3px; }
   #screenRect { border-radius: 3px; filter: blur(1.5px); }
   #spill { inset: 0; }
   /* 還沒有螢幕圖時的暫代：畫一個發光的方框 */
@@ -86,6 +88,7 @@
   <div id="frame">
     <img id="room" src="screen.jpg" alt="">
     <div id="spill"></div>
+    <div id="screenDim"></div>
     <div id="screenRect"></div>
     <img id="photo" src="bridge.jpg" alt="兩人牽著腳踏車，站在橋上看夜景的背影">
     <canvas id="twinkle"></canvas>
@@ -126,7 +129,7 @@
   const SCRIPT = window.BD_SCRIPT || [];
   const $ = (id) => document.getElementById(id);
   const stage = $("stage"), frame = $("frame"), photo = $("photo"), room = $("room");
-  const screenRect = $("screenRect"), spill = $("spill");
+  const screenRect = $("screenRect"), screenDim = $("screenDim"), spill = $("spill");
   const twinkle = $("twinkle"), fxBack = $("fxBack"), fxFront = $("fxFront");
   const panel = $("panel"), log = $("log"), more = $("more"), bgm = $("bgm");
   const ASPECT = 1536 / 1024;
@@ -185,8 +188,8 @@
 
   // ---------- 開場螢幕 ----------
   // 螢幕發亮的範圍（原圖比例）。拿到 Codex 的 screen.jpg 後照圖上的螢幕位置調整。
-  const SCREEN_RECT = { x: 0.33, y: 0.2, w: 0.34, h: 0.38 };
-  Object.assign(screenRect.style, { left: SCREEN_RECT.x * 100 + "%", top: SCREEN_RECT.y * 100 + "%", width: SCREEN_RECT.w * 100 + "%", height: SCREEN_RECT.h * 100 + "%" });
+  const SCREEN_RECT = { x: 0.34, y: 0.206, w: 0.32, h: 0.363 };  // screen.jpg 實測
+  for (const el of [screenRect, screenDim]) Object.assign(el.style, { left: SCREEN_RECT.x * 100 + "%", top: SCREEN_RECT.y * 100 + "%", width: SCREEN_RECT.w * 100 + "%", height: SCREEN_RECT.h * 100 + "%" });
   const scx = (SCREEN_RECT.x + SCREEN_RECT.w / 2) * 100, scy = (SCREEN_RECT.y + SCREEN_RECT.h / 2) * 100;
   room.addEventListener("error", () => frame.classList.add("noroom"));
   if (room.complete && !room.naturalWidth) frame.classList.add("noroom");  // 圖在腳本跑之前就載入失敗
@@ -210,7 +213,9 @@
     const lv = Math.max(0, screenLevel);
     const [r, g, b] = tint;
     screenRect.style.background = `rgb(${r},${g},${b})`;
-    screenRect.style.opacity = (frame.classList.contains("noroom") ? 1 : 0.8) * Math.min(1, lv);
+    const placeholder = frame.classList.contains("noroom");
+    screenRect.style.opacity = (placeholder ? 1 : 0.35) * Math.min(1, lv);
+    screenDim.style.opacity = placeholder ? 0 : clamp(1 - lv, 0, 1) * 0.8;
     spill.style.background = `radial-gradient(ellipse 60% 70% at ${scx}% ${scy}%, rgba(${r},${g},${b},.38), transparent 70%)`;
     spill.style.opacity = Math.min(1, lv) * 0.9;
   }
