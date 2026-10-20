@@ -89,6 +89,11 @@
   #cover button:hover, #endcard button:hover { background: rgba(90,150,255,.12); box-shadow: 0 0 18px rgba(90,160,255,.35); }
   .hidden { opacity: 0; pointer-events: none; }
   #endcard { background: rgba(3,4,10,.82); transition: opacity 3s ease; }
+  #endcard .pitch { margin-top: 2.2em; color: #c3cdee; font-size: 15px; }
+  /* 結尾主要按鈕：導到 Steam 加願望清單 */
+  #endcard .steam { margin-top: 1.2em; display: inline-block; font-size: 17px; letter-spacing: .15em; color: #fff; text-decoration: none; background: linear-gradient(180deg, #3b7fd4, #1f5fb0); border: 1px solid rgba(170,210,255,.6); border-radius: 999px; padding: 12px 36px; box-shadow: 0 0 22px rgba(80,150,255,.45); transition: transform .2s, box-shadow .2s; }
+  #endcard .steam:hover { transform: translateY(-1px); box-shadow: 0 0 30px rgba(110,175,255,.7); }
+  #endcard button#again { margin-top: 1.2em; font-size: 14px; padding: 8px 26px 8px 30px; }
 
   /* 手機（直式或窄螢幕）：圖在上、文字在下，交界用漸層蓋過去 */
   body.mobile #stage { height: var(--sh); }
@@ -134,6 +139,8 @@
 <div id="endcard" class="hidden">
   <h1>蝶夢莊周</h1>
   <p>心動除錯　後日談</p>
+  <p class="pitch">《心動除錯》本篇免費遊玩，後日談 DLC 製作中。</p>
+  <a id="steam" class="steam" href="https://store.steampowered.com/app/4601900/Debug_Your_Heart/" target="_blank" rel="noopener">在 Steam 加入願望清單</a>
   <button id="again" type="button">再讀一次</button>
 </div>
 
